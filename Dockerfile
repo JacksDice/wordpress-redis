@@ -1,9 +1,8 @@
-
 FROM wordpress:php8.5-fpm-alpine
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
+RUN apk add --no-cache --virtual .build-deps \
+        $PHPIZE_DEPS \
+        linux-headers \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
-    && rm -rf /var/lib/apt/lists/*
+    && apk del .build-deps
